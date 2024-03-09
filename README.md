@@ -6,9 +6,22 @@ The demonstrations are built with Java, Spring Boot, and log4j, but the vulnerab
 
 ## See Log Injection in Action
 
-* Ep1
-* Ep2
-* Ep3
+* Ep.1 "Newlines" (0:53)
+* Ep.2 "ANSI Sequences" (0:58)
+* Ep.3 "JavaScript" (1:11)
+
+### Ep.1 "Newlines" (0:53)
+
+https://github.com/vlkl-sap/log-injection-demo/assets/71723302/70437d75-19a8-481b-843e-1a7ded3af92c
+
+### Ep.2 "ANSI Sequences" (0:58)
+
+https://github.com/vlkl-sap/log-injection-demo/assets/71723302/985c4156-0ad1-46cc-b36f-c43e7dc58aa7
+
+### Ep.3 "JavaScript" (1:11)
+
+https://github.com/vlkl-sap/log-injection-demo/assets/71723302/243cb444-fbad-4c54-af0b-b88ed6fc107c
+
 
 ## What Is a Log Injection?
 
