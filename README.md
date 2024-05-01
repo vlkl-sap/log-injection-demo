@@ -52,7 +52,52 @@ Each of these scenarios may or may not apply to you. For example, if your applic
 
 In general, there is no ultimate definition of what is safe or unsafe to log - that depends on how your logs are processed and your risk appetite. Unfortunately, experience shows that in practice logs are often "promiscuous" - they can move around and be processed in a variety of systems, sometimes in surprising ways and a long time after their creation. It is thus better to implement more protections than less. Luckily, it is possible to do so.
 
+## Mitigations (work in progress)
+
 ## Mitigations
 
-Coming soon.
+Unfortunately, there is currently no "push-button" mitigation for log injection. I will explain different approaches and trade-offs below. The explanation will feature Java, but the concepts apply to other technologies as well.
+
+### How to Neutralize Dangerous Inputs
+
+I strongly advise **against** trying to sanitize the input (i.e., trying to **delete** potentially dangerous characters from it - `s.replace("\\n","")` and the like). There are several reasons but the main one is that such sanitization is not reversible. Yet, for forensical purposes, we always want to preserve the original input (while still neutralizing the danger it may exude). 
+
+The best mitigation is thus **encoding**. Various encodings are possible - URL-encoding (also known as percent-encoding) is a good choice. It is reversible, easy to imoplement, and protects against a very wide range of dangerous inputs.
+
+### Where to Neutralize
+
+#### Variant 1: At the point of logging
+
+This variant is conceptually simple and flexible. It also protects against any vulnerabilities in the logging library iteself (famous example: CVE-2021-44228 Log4Shell).
+
+Define a helper method as follows:
+```
+    public static String encode(String s) {
+        return java.net.URLEncoder.encode(s,
+            java.nio.charset.StandardCharsets.UTF_8);
+    }
+```
+and utilize this encoder when logging untrusted data, e.g.:
+```
+    @GetMapping("/endpoint")
+    public String endpoint(@RequestParam("data") String s) {
+        Logger logger = LoggerFactory.getLogger(Controller.class);
+        logger.info("Received data item {}", encode(s));
+        return "OK";
+    }
+```
+Note that untrusted data has to be encoded when storing it in a ThreadContext or MDC (these are examples of a user-constructed key-value map that a logger library will include in the log entry). The same recommendation applies when constructing exceptions.
+
+Don't: `throw new IllegalArgumentException(s);`
+
+Do: `throw new IllegalArgumentException(encode(s));`
+
+Consistent usage of encoding can be enforced by static analysis (or even grep).
+
+
+#### Variant 2: Logger configuration - structured layout
+
+Configuring a structured log layout (e.g., a JSON layout) already protects against some log injection scenarios, as the logging library will typically encode the characters that have a special meaning in JSON. An attacker will thus not be able to change the structure of the log record and thus create fake log entries. Injection of JavaScript and misdirection with homographs is typially still possible, though. With some logging libraries, users can supply additional encoders, which would help to mitigate these attack scenarios as well.
+
+#### Variant 3: Logger configuration - pattern layout
 
