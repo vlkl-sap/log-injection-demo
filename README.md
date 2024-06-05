@@ -14,6 +14,8 @@ The demonstrations are built with Java, Spring Boot, and log4j, but the vulnerab
 
 https://github.com/vlkl-sap/log-injection-demo/assets/71723302/70437d75-19a8-481b-843e-1a7ded3af92c
 
+The attack in Ep. 1 only works with pattern layout logging. For an attack that also works with structured layout (e.g., JSON layout), see Ep. 3.
+
 ### Ep.2 "ANSI Sequences" (0:58)
 
 https://github.com/vlkl-sap/log-injection-demo/assets/71723302/985c4156-0ad1-46cc-b36f-c43e7dc58aa7
@@ -21,6 +23,10 @@ https://github.com/vlkl-sap/log-injection-demo/assets/71723302/985c4156-0ad1-46c
 ### Ep.3 "JavaScript" (1:11)
 
 https://github.com/vlkl-sap/log-injection-demo/assets/71723302/243cb444-fbad-4c54-af0b-b88ed6fc107c
+
+The video demonstrates the attack using a pattern layout of the log, but the attack works just as well with a structured layout (e.g., JSON).
+
+The video shows [a real XSS vulnerability in an older version of Kibana](https://discuss.elastic.co/t/elastic-stack-6-1-2-and-5-6-6-security-update/115763). Both [Kibana](https://www.cvedetails.com/vulnerability-list/vendor_id-16559/opxss-1/) and [Splunk](https://www.cvedetails.com/vulnerability-list/vendor_id-10963/opxss-1/Splunk.html) have seen a stream of XSS vulnerabilities over the past years. XSS can be exploited toward a variety of malicious ends, e.g., password stealing with fake login screens.
 
 
 ## What Is a Log Injection?
